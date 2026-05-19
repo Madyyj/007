@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Ramy Rowerowej</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 30px;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #1976d2;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #125ea7;
+    }
+
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        background: #e3f2fd;
+        border-radius: 8px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Kalkulator Ramy Rowerowej</h1>
+
+    <label>Wzrost (cm)</label>
+    <input type="number" id="height" placeholder="np. 180">
+
+    <label>Przekrok (cm)</label>
+    <input type="number" id="inseam" placeholder="np. 82">
+
+    <label>Typ roweru</label>
+    <select id="bikeType">
+        <option value="mtb">MTB</option>
+        <option value="road">Szosa</option>
+        <option value="trekking">Trekking / Cross</option>
+        <option value="gravel">Gravel</option>
+    </select>
+
+    <button onclick="calculateFrame()">Oblicz</button>
+
+    <div class="result" id="result" style="display:none;"></div>
+
+</div>
+
+<script>
+
+function calculateFrame() {
+
+    const height = parseFloat(document.getElementById("height").value);
+    const inseam = parseFloat(document.getElementById("inseam").value);
+    const bikeType = document.getElementById("bikeType").value;
+
+    const resultDiv = document.getElementById("result");
+
+    if (!height || !inseam) {
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = "Wprowadź wszystkie dane.";
+        return;
+    }
+
+    let frameSize = 0;
+    let unit = "";
+
+    switch(bikeType) {
+
+        case "road":
+            frameSize = inseam * 0.67;
+            unit = "cm";
+            break;
+
+        case "mtb":
+            frameSize = inseam * 0.226;
+            unit = "cali";
+            break;
+
+        case "trekking":
+            frameSize = inseam * 0.63;
+            unit = "cm";
+            break;
+
+        case "gravel":
+            frameSize = inseam * 0.65;
+            unit = "cm";
+            break;
+    }
+
+    frameSize = frameSize.toFixed(1);
+
+    let sizeLabel = "";
+
+    if (bikeType === "mtb") {
+        if (frameSize < 17) sizeLabel = "S";
+        else if (frameSize < 19) sizeLabel = "M";
+        else if (frameSize < 21) sizeLabel = "L";
+        else sizeLabel = "XL";
+    } else {
+        if (frameSize < 52) sizeLabel = "S";
+        else if (frameSize < 56) sizeLabel = "M";
+        else if (frameSize < 59) sizeLabel = "L";
+        else sizeLabel = "XL";
+    }
+
+    resultDiv.style.display = "block";
+
+    resultDiv.innerHTML = `
+        <h2>Wynik</h2>
+
+        <p>
+            <strong>Rozmiar ramy:</strong>
+            ${frameSize} ${unit}
+        </p>
+
+        <p>
+            <strong>Sugerowany rozmiar:</strong>
+            ${sizeLabel}
+        </p>
+
+        <p>
+            Jeśli jesteś pomiędzy dwoma rozmiarami:
+            <br><br>
+            • mniejsza rama = większa zwrotność
+            <br>
+            • większa rama = większa stabilność
+        </p>
+    `;
+}
+
+</script>
+
+</body>
+</html>
